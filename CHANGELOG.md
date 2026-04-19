@@ -4,8 +4,17 @@
 ### Added
 - Added `docs/MILESTONE_13.md` to define the docs-first plan for a grounded
   `mu_exec` extractor.
+- Added `docs/MILESTONE_14.md` to define the next-step `ghidra + trace`
+  extractor pipeline milestone and lane structure.
 - Added `src/zksec/mu_exec.py` with `MuExecWitness` plus deterministic witness
   build, invariant-evaluation, and receipt-field helpers.
+- Added library-only Milestone 14 ingest helpers in `src/zksec/mu_exec.py`:
+  `MuExecTraceProposalFact`, `MuExecGhidraGroundingFact`,
+  `MuExecIngestBundle`, `MuExecLinkResolution`,
+  `normalize_mu_exec_ingest(...)`, and
+  `build_mu_exec_witness_from_ingest(...)`.
+- Added `tests/test_mu_exec.py` for fixture-driven ingest normalization and
+  witness materialization coverage.
 
 ### Changed
 - Updated `COMPACTIFIED_CONTEXT.md` with canonical metadata for the
@@ -19,6 +28,12 @@
 - Recorded the repo-facing architectural decision that raw trace surfaces stay
   proposal-only, IR grounds `mu_exec`, and invariant failure over grounded
   witnesses is the point where a security violation exists.
+- Refreshed the canonical `Language Model Security` thread from the online UUID
+  and recorded the sharper follow-up decision that the next milestone is a
+  concrete `ghidra + trace` extractor pipeline rather than only abstract
+  witness grounding.
+- Updated `README.md` and `TODO.md` to mark Milestone 14 implemented as a
+  library-only ingest surface rather than a future plan.
 - Extended `src/zksec/admissibility.py` so grounded `mu_exec` invariant
   failures reject, grounded-safe witnesses allow, and proposal-only witnesses
   require confirmation rather than silently promoting to violations.
@@ -28,6 +43,9 @@
 - Extended `src/zksec/__init__.py` to export the Milestone 13 witness helpers.
 - Added focused Milestone 13 coverage in `tests/test_admissibility.py`,
   `tests/test_routing.py`, and `tests/test_reporting.py`.
+- Revalidated the extractor-facing and authority-split test surface with
+  `PYTHONPATH=src pytest -q tests/test_mu_exec.py tests/test_admissibility.py tests/test_routing.py tests/test_reporting.py`
+  and recorded `38 passed`.
 - Revalidated the full suite with `PYTHONPATH=src pytest -q` and recorded
   `67 passed`.
 

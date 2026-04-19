@@ -33,9 +33,13 @@ Last updated: 2026-04-19 (Australia/Brisbane)
   `mu_exec`, rather than from hand-written vulnerability labels.
 - A normalized zkSEC stack should read:
   `code/binary/trace -> Phi_exec -> mu_exec -> epsilon_exec -> kappa_sec -> Admk_sec -> vulnerability witness`.
-- The next repo-facing milestone should focus on a `mu_exec` extractor that
-  fuses trace proposals with IR grounding while preserving the local-first,
-  no-outbound-network invariant.
+- The refreshed thread now sharpens the next milestone from generic grounding
+  into a concrete `mu_exec` extractor pipeline: `ghidra + trace`, where trace
+  proposes candidate links, IR grounds the materialized witness, and invariant
+  evaluation is the point where a violation becomes real.
+- The extractor output should be a deterministic stream of grounded execution
+  interaction witnesses rather than vulnerability labels, with unresolved links
+  staying unresolved instead of being force-classified.
 
 ## Adjacent Relevance Decisions
 - Primary relevant repos confirmed: `../ITIR-suite`, `../zos-server`, `../zkperf`, `../ipfs-dasl`.
@@ -58,5 +62,7 @@ Last updated: 2026-04-19 (Australia/Brisbane)
 - Initialize this repository as the working area for `zkSEC`.
 - Keep context synchronized with canonical chat metadata before design or implementation changes.
 - Follow strict sequencing: Docs -> TODO -> Code -> Changelog.
-- Use Milestone 13 to formalize the `mu_exec` extractor boundary before adding
-  any new execution-analysis implementation.
+- Use Milestone 13 as the completed witness-boundary checkpoint.
+- Use Milestone 14 to design and stage the concrete `mu_exec` extractor
+  pipeline around `ghidra + trace` proposal/grounding separation before adding
+  real local extractor ingestion.

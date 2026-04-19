@@ -103,3 +103,18 @@
   unresolved/proposal-only cases.
 - [x] Revalidate the impacted test surface with `PYTHONPATH=src pytest -q`
   and record `67 passed`.
+
+## Milestone 14: `mu_exec` Extractor Pipeline
+- [x] Refresh the `Language Model Security` chat from the online UUID and
+  normalize the sharper `ghidra + trace` extractor direction into local docs.
+- [x] Add `docs/MILESTONE_14.md` to define the next repo-facing milestone and
+  its bounded lane structure.
+- [x] Define the first local ingest schema for trace proposal facts and
+  IR-grounded facts that can feed `MuExecWitness`.
+- [x] Decide the first extractor entrypoint surface as a library-only helper in
+  `src/zksec/mu_exec.py`.
+- [x] Add the first extractor-facing normalization tests without requiring live
+  trace capture or a full Ghidra runtime.
+- [x] Revalidate the extractor-facing and authority-split test surface with
+  `PYTHONPATH=src pytest -q tests/test_mu_exec.py tests/test_admissibility.py tests/test_routing.py tests/test_reporting.py`
+  and record `38 passed`.

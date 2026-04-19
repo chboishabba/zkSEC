@@ -38,6 +38,9 @@ See `docs/DEPENDENCIES.md` for details.
 - Milestone 13 implemented: grounded `mu_exec` witness modeling, routing and
   audit receipt threading, and focused verification for grounded-safe,
   grounded-failure, and proposal-only cases.
+- Milestone 14 implemented: library-only `ghidra + trace` ingest dataclasses,
+  deterministic normalization, and fixture-driven tests for unresolved,
+  grounded, and invariant-failure materialization.
 
 ## Architecture Diagram
 - [Control architecture diagram (SVG)](docs/uml/zksec-control-architecture.svg)

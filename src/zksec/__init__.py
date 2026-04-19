@@ -8,10 +8,16 @@ from .context import (
 )
 from .routing import RoutedActionDecision, evaluate_adapter_action
 from .mu_exec import (
+    MuExecGhidraGroundingFact,
+    MuExecIngestBundle,
+    MuExecLinkResolution,
+    MuExecTraceProposalFact,
     MuExecWitness,
     build_mu_exec_witness,
+    build_mu_exec_witness_from_ingest,
     evaluate_mu_exec_invariants,
     mu_exec_receipt_fields,
+    normalize_mu_exec_ingest,
 )
 from .admissibility import (
     ALLOWED_ZOS_INBOUND_FIELDS,
@@ -97,10 +103,16 @@ __all__ = [
     "zos_server_contract",
     "RoutedActionDecision",
     "evaluate_adapter_action",
+    "MuExecTraceProposalFact",
+    "MuExecGhidraGroundingFact",
+    "MuExecIngestBundle",
+    "MuExecLinkResolution",
     "MuExecWitness",
     "build_mu_exec_witness",
+    "build_mu_exec_witness_from_ingest",
     "evaluate_mu_exec_invariants",
     "mu_exec_receipt_fields",
+    "normalize_mu_exec_ingest",
     "AdapterExecutionDirective",
     "build_execution_directive",
     "execution_audit_record",
