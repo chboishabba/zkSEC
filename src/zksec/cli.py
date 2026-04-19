@@ -24,6 +24,73 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--action", required=True, help="Action to evaluate.")
     parser.add_argument("--actor", default="operator", help="Actor role requesting action.")
     parser.add_argument(
+        "--actor-identity",
+        default=None,
+        help="Stable actor identity for high-authority execution.",
+    )
+    parser.add_argument(
+        "--scope",
+        default=None,
+        help="Execution scope for the action (required for high-authority actions).",
+    )
+    parser.add_argument(
+        "--plan-ref",
+        default=None,
+        help="Reference to execution plan/receipt for high-authority actions.",
+    )
+    parser.add_argument(
+        "--requested-capability",
+        action="append",
+        default=None,
+        help="Optional request capabilities for this action. Repeat for multiple values.",
+    )
+    parser.add_argument(
+        "--requested-channel",
+        choices=["proposal", "confirmed", "autonomous"],
+        default=None,
+        help="Execution channel class to run under.",
+    )
+    parser.add_argument(
+        "--requested-ring",
+        choices=["sovereign", "bounded", "remote"],
+        default=None,
+        help="Capability ring to target.",
+    )
+    parser.add_argument(
+        "--requested-destination",
+        choices=["local", "peer", "public"],
+        default=None,
+        help="Declared destination class.",
+    )
+    parser.add_argument(
+        "--resource",
+        default=None,
+        help=(
+            "Resource target for the action. Must stay within adapter-scoped paths. "
+            "URI-like values are rejected."
+        ),
+    )
+    parser.add_argument(
+        "--request-payload",
+        default=None,
+        help="Optional payload/request text to validate against secret-exposure patterns.",
+    )
+    parser.add_argument(
+        "--requested-artifact-hash",
+        default=None,
+        help="Optional artifact hash for structural delta bookkeeping.",
+    )
+    parser.add_argument(
+        "--previous-artifact-hash",
+        default=None,
+        help="Optional previous artifact hash for delta bookkeeping.",
+    )
+    parser.add_argument(
+        "--payload-sanitized",
+        action="store_true",
+        help="Declare request payload has passed remote-minimization/sanitization checks.",
+    )
+    parser.add_argument(
         "--source",
         choices=["managed", "public"],
         default="managed",
@@ -75,9 +142,21 @@ def run(argv: Sequence[str] | None = None) -> int:
         adapter_name=args.adapter,
         action=args.action,
         actor_role=args.actor,
+        actor_identity=args.actor_identity,
+        scope=args.scope,
+        plan_ref=args.plan_ref,
+        resource=args.resource,
+        request_payload=args.request_payload,
+        requested_capabilities=tuple(args.requested_capability) if args.requested_capability else (),
         source=args.source,
         risk_level=args.risk,
         confirmed=args.confirmed,
+        requested_channel=args.requested_channel,
+        requested_ring=args.requested_ring,
+        requested_destination=args.requested_destination,
+        requested_artifact_hash=args.requested_artifact_hash,
+        previous_artifact_hash=args.previous_artifact_hash,
+        payload_sanitized=args.payload_sanitized,
     )
     directive: AdapterExecutionDirective = build_execution_directive(
         routed=routed,

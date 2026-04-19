@@ -1,6 +1,6 @@
 # COMPACTIFIED_CONTEXT
 
-Last updated: 2026-04-07 (Australia/Brisbane)
+Last updated: 2026-04-19 (Australia/Brisbane)
 
 ## Resolved Chat Context
 - Title: LiteLLM hack analysis
@@ -15,6 +15,27 @@ Last updated: 2026-04-07 (Australia/Brisbane)
 - Default architecture direction should be local-first and sandboxed.
 - Remote intelligence usage should be reduced, bounded, and privacy-preserving.
 - Tooling and action execution should be confirmation-gated and least-privilege.
+
+## Additional Resolved Chat Context
+- Title: Language Model Security
+- Online UUID: 69e43a82-9fc0-839f-a022-cbf28c6c6a5f
+- Canonical thread ID: a70ae3942d8e8f440ec62db62464775e8979d6c4
+- Source used: db (after direct online UUID pull into canonical archive)
+- Canonical DB: /home/c/chat_archive.sqlite
+- Decision reason: db_match_found (title_exact after UUID ingest)
+
+## Main Topics / Decisions Pulled From Language Model Security
+- `trace`, `zkperf`, and `strace` are proposal-only evidence surfaces and do not
+  by themselves constitute a verified violation.
+- `IR` and binary semantics are the grounding layer that materializes `mu_exec`
+  as a concrete execution interaction witness.
+- Security violations should be derived from invariant failure over grounded
+  `mu_exec`, rather than from hand-written vulnerability labels.
+- A normalized zkSEC stack should read:
+  `code/binary/trace -> Phi_exec -> mu_exec -> epsilon_exec -> kappa_sec -> Admk_sec -> vulnerability witness`.
+- The next repo-facing milestone should focus on a `mu_exec` extractor that
+  fuses trace proposals with IR grounding while preserving the local-first,
+  no-outbound-network invariant.
 
 ## Adjacent Relevance Decisions
 - Primary relevant repos confirmed: `../ITIR-suite`, `../zos-server`, `../zkperf`, `../ipfs-dasl`.
@@ -37,3 +58,5 @@ Last updated: 2026-04-07 (Australia/Brisbane)
 - Initialize this repository as the working area for `zkSEC`.
 - Keep context synchronized with canonical chat metadata before design or implementation changes.
 - Follow strict sequencing: Docs -> TODO -> Code -> Changelog.
+- Use Milestone 13 to formalize the `mu_exec` extractor boundary before adding
+  any new execution-analysis implementation.

@@ -1,0 +1,67 @@
+@startuml
+title zkSEC Control Architecture, Admissibility, and Route Checks
+
+skinparam linetype ortho
+skinparam defaultTextAlignment center
+skinparam component {
+  FontSize 12
+}
+skinparam activity {
+  FontSize 11
+}
+
+rectangle "CLI (cli.py)\nEntry: run()\nArgs: adapter, action, resource,\nrequest_payload, source, risk" as CLI
+rectangle "Routing (routing.py)\nOutput: RoutedActionDecision" as ROUTER
+rectangle "Admissibility (admissibility.py)\ntransform tuple\nZOS bridge\nunified detector\nattack harness" as ADMISSIBILITY
+rectangle "Security (security.py)\nassess_action\nassess_data_boundary\npolicy_receipt" as SECURITY
+rectangle "Adapter Contracts\n(contracts.py)\nzos_server | kant_zk_pastebin" as CONTRACTS
+rectangle "Execution (execution.py)\nAdapterExecutionDirective" as EXECUTION
+rectangle "Reporting (reporting.py)\nexecution_audit_record" as REPORTING
+rectangle "Context/Sources (context.py)\nknown_adjacent_surfaces\ninvariants" as CONTEXT
+
+node "policy preconditions\nreadiness gate" as PRECONDITION
+
+CLI --> ROUTER : evaluate_adapter_action()
+ROUTER --> SECURITY : assess_action()
+ROUTER --> SECURITY : assess_data_boundary(action, resource, payload, resource_roots)
+ROUTER --> CONTRACTS : _resolve_adapter()\nvalidate_action_against_adapter()
+ROUTER --> ADMISSIBILITY : evaluate_transform_admissibility()\nbridge_zos_proposal()\nevaluate_unified_detector()
+ROUTER --> PRECONDITION : policy_receipt\n(reason_code trail)
+
+ROUTER --> CLI : RoutedActionDecision\nstatus = deny / requires_confirmation / allow\nreason_code
+CLI --> EXECUTION : build_execution_directive(routed, operator, environment)
+EXECUTION --> PRECONDITION : if status==allow\n  and action in {deploy,patch,remediate}\n  require actor_identity + scope + plan_ref\n  => execution_receipt_precondition_failed
+EXECUTION --> REPORTING : execution_audit_record(operator, directive)
+REPORTING --> CLI : execution_audit_record\nadapter/action/execution_status/reason_code/command
+
+CONTEXT --> CONTRACTS : adjacent surfaces\nand trust invariants
+CONTEXT --> ADMISSIBILITY : proposal-only semantic context\nand ontology vocabulary
+
+note right of SECURITY
+Decision reasons fed into routing:
+- unknown_action
+- proposal_from_public_source
+- requires_confirmation
+- resource_scope_uri_forbidden
+- resource_scope_out_of_bounds
+- secret_material_detected
+end note
+
+note right of ADMISSIBILITY
+Transform surfaces evaluated before READY:
+- F_cap
+- F_channel
+- F_delta
+- F_onto
+- ZOS proposal-only bridge
+- multi-step attack-chain replay
+end note
+
+note right of PRECONDITION
+These checks are hard gates before READY:
+- deny => blocked
+- requires_confirmation => operator review
+- allow + preconditions pass => ready
+end note
+
+@enduml

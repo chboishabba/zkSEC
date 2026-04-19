@@ -24,6 +24,7 @@ Align initial runtime behavior with ITIR security doctrine:
   - public source findings remain proposals
   - high-risk managed actions require confirmation
   - unknown actions are denied
+- Keep all local security policy evaluation offline and non-authoritative until an explicit adapter execution boundary is reached.
 
 ## Acceptance Checks
 1. `SecurityDecision` and `assess_action` exist and return structured result.
@@ -32,3 +33,4 @@ Align initial runtime behavior with ITIR security doctrine:
 4. `TODO.md` marks Milestone 02 tasks as concrete and completed.
 5. `src/zksec/adapters/contracts.py` defines bounded contracts for `../zos-server` and `../kant-zk-pastebin`.
 6. Changelog records security gate and adapter-contract scaffolding.
+7. Local surface invariants explicitly document no outbound network access for decision evaluation.

@@ -5,6 +5,15 @@ from __future__ import annotations
 SECURITY_CONTEXT_VERSION = "0.1.0"
 
 
+def known_surface_invariants() -> list[str]:
+    """Return mandatory invariants that bound the local security surface."""
+    return [
+        "No outbound network access from this surface; all decisions are locally derived.",
+        "No external process execution is performed by the decision engine.",
+        "Behavior is read-only/policy-only until explicit execution adapters run commands.",
+    ]
+
+
 def load_security_context() -> dict[str, object]:
     """Return baseline security context metadata."""
     return {
@@ -14,6 +23,7 @@ def load_security_context() -> dict[str, object]:
         "chat_thread_online_uuid": "69ce0ac6-dd2c-839f-8b84-a0d397285f90",
         "chat_thread_canonical_id": "130c635a73d780dfb0552107cc0a77a77d4cfea9",
         "source": "db",
+        "surface_invariants": known_surface_invariants(),
     }
 
 

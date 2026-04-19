@@ -1,0 +1,71 @@
+@startuml
+' C4-style decomposition (lightweight): Context + container + interfaces
+left to right direction
+
+!define PERSON(name,descr) actor "name\ndescr" as name
+!define SYSTEM(name,descr) rectangle "name\ndescr" as name
+!define CONTAINER(name,descr) rectangle "name\ndescr" as name
+!define QUEUE(name,descr) database "name\ndescr" as name
+
+title zkSEC C4-style Architecture
+
+skinparam shadowing false
+skinparam rectangle {
+  RoundCorner 5
+}
+
+PERSON(Operator, "Human operator")
+PERSON(Maintainer, "Maintainer/authorized actor")
+
+SYSTEM(zkSEC, "zkSEC policy surface\n(offline decision gateway)")
+SYSTEM(AdjacentSystems, "Adjacent systems\n(kant-zk-pastebin, zos-server)")
+SYSTEM(Zkperf, "zkperf witness tooling")
+
+CONTAINER(DecisionEngine, "Security policy engine\n\u2022 assess_action\n\u2022 assess_data_boundary")
+CONTAINER(Contracts, "Adapter contracts\n\u2022 action allowlists\n\u2022 resource roots")
+CONTAINER(Geometry, "Capability geometry\n\u2022 action capability profiles\n\u2022 channel/ring/destination checks")
+CONTAINER(Admissibility, "Transform admissibility\n\u2022 proposal-only ZOS bridge\n\u2022 unified detector\n\u2022 ontology checks\n\u2022 attack harness")
+CONTAINER(Routing, "Routing and receipts\n\u2022 evaluate_adapter_action\n\u2022 policy receipts")
+CONTAINER(Execution, "Execution gate\n\u2022 build_execution_directive")
+CONTAINER(Reporting, "Reporting\n\u2022 execution_audit_record")
+
+QUEUE(AuditStore, "Evidence store\nchangelog, milestones, tests, traces")
+
+Operator --> zkSEC : CLI request\n(action, resource, payload)
+Maintainer --> zkSEC : authorization\n(actor_identity, plan_ref, scope)
+
+zkSEC --> DecisionEngine : evaluate action contract
+zkSEC --> Contracts : resolve adapter profile
+Contracts --> Geometry : supplies action geometry
+zkSEC --> Admissibility : evaluate transform tuple
+zkSEC --> Routing : compose gate + adapter decisions
+Routing --> Execution : produce execution directive
+Execution --> Reporting : command + reason code
+Reporting --> AuditStore : deterministic audit records
+
+DecisionEngine --> AuditStore : policy receipts\n(boundary/allow/deny)
+Admissibility --> AuditStore : admissibility verdicts\nbridge/detector metadata
+Contracts --> AdjacentSystems : declared action contracts
+zkSEC --> Zkperf : no live outbound calls\n(reference-only witness traces)
+
+note right of DecisionEngine
+  Invariant: resource scope normalized\nand URI-like paths rejected
+end note
+
+note right of Geometry
+  Invariant: geometry requests must stay\ninside action and adapter envelope
+end note
+
+note right of Admissibility
+  Invariant: proposal metadata never becomes authority\nwithout explicit managed promotion
+end note
+
+note right of Execution
+  Invariant: high-authority actions\nrequire identity + scope + plan_ref
+end note
+
+note right of zkSEC
+  No outbound network/process execution\nin this local surface.
+end note
+
+@enduml
