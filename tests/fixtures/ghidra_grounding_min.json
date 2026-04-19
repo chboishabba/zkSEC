@@ -1,0 +1,27 @@
+{
+  "sample_id": "ghidra-min-alloc-free-use",
+  "binary_id": "fixture.bin",
+  "ir_facts": [
+    {
+      "fact_id": "ir:min:buf-request",
+      "producer": "ghidra",
+      "artifact_id": "fixture.bin",
+      "fn": "handle_request",
+      "obj_id": "buf:request",
+      "obj_kind": "buffer",
+      "capacity": 64,
+      "field_offset": null,
+      "field_width": null,
+      "lifetime_kind": "heap",
+      "authority_kind": "kernel",
+      "carrier_kind": "request",
+      "aliases": [
+        "buf:req"
+      ],
+      "provenance": [
+        "ghidra:fn:handle_request",
+        "ghidra:addr:401000"
+      ]
+    }
+  ]
+}

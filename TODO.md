@@ -115,6 +115,9 @@
   `src/zksec/mu_exec.py`.
 - [x] Add the first extractor-facing normalization tests without requiring live
   trace capture or a full Ghidra runtime.
+- [x] Pin the first producer contract in
+  `docs/producer_contracts/mu_exec_ingest_v1.md` with one `zkperf` trace
+  fixture and one `ghidra` grounding fixture.
 - [x] Revalidate the extractor-facing and authority-split test surface with
-  `PYTHONPATH=src pytest -q tests/test_mu_exec.py tests/test_admissibility.py tests/test_routing.py tests/test_reporting.py`
-  and record `38 passed`.
+  `PYTHONPATH=src pytest -q tests/test_mu_exec_ingest.py tests/test_mu_exec.py tests/test_admissibility.py tests/test_routing.py tests/test_reporting.py`
+  and record `41 passed`.

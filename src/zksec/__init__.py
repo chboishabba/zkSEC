@@ -7,6 +7,12 @@ from .context import (
     load_security_context,
 )
 from .routing import RoutedActionDecision, evaluate_adapter_action
+from .build_mu_exec_from_ingest import (
+    load_ir_grounding_facts,
+    load_trace_proposal_facts,
+    resolve_linkage_witness,
+)
+from .ingest_types import IRGroundingFact, LinkageWitness, TraceProposalFact
 from .mu_exec import (
     MuExecGhidraGroundingFact,
     MuExecIngestBundle,
@@ -103,6 +109,12 @@ __all__ = [
     "zos_server_contract",
     "RoutedActionDecision",
     "evaluate_adapter_action",
+    "TraceProposalFact",
+    "IRGroundingFact",
+    "LinkageWitness",
+    "resolve_linkage_witness",
+    "load_trace_proposal_facts",
+    "load_ir_grounding_facts",
     "MuExecTraceProposalFact",
     "MuExecGhidraGroundingFact",
     "MuExecIngestBundle",

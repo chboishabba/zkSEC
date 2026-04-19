@@ -1,0 +1,66 @@
+{
+  "sample_id": "zkperf-min-alloc-free-use",
+  "binary_id": "fixture.bin",
+  "trace_facts": [
+    {
+      "fact_id": "trace:min:1",
+      "run_id": "run-min-1",
+      "tool": "zkperf",
+      "t_index": 1,
+      "timestamp_ns": 1010,
+      "pid": 77,
+      "tid": 77,
+      "actor": "worker",
+      "op": "alloc",
+      "obj_hint": "buf:request",
+      "value_int": 64,
+      "value_str": null,
+      "quals": [
+        "shared"
+      ],
+      "provenance": [
+        "recording:line:1"
+      ]
+    },
+    {
+      "fact_id": "trace:min:2",
+      "run_id": "run-min-1",
+      "tool": "zkperf",
+      "t_index": 2,
+      "timestamp_ns": 1020,
+      "pid": 77,
+      "tid": 77,
+      "actor": "worker",
+      "op": "free",
+      "obj_hint": "buf:request",
+      "value_int": null,
+      "value_str": null,
+      "quals": [
+        "async"
+      ],
+      "provenance": [
+        "recording:line:2"
+      ]
+    },
+    {
+      "fact_id": "trace:min:3",
+      "run_id": "run-min-1",
+      "tool": "zkperf",
+      "t_index": 3,
+      "timestamp_ns": 1030,
+      "pid": 77,
+      "tid": 78,
+      "actor": "worker",
+      "op": "read",
+      "obj_hint": "buf:request",
+      "value_int": 8,
+      "value_str": "post-free",
+      "quals": [
+        "crash_near"
+      ],
+      "provenance": [
+        "recording:line:3"
+      ]
+    }
+  ]
+}

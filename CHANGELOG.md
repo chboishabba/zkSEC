@@ -15,6 +15,13 @@
   `build_mu_exec_witness_from_ingest(...)`.
 - Added `tests/test_mu_exec.py` for fixture-driven ingest normalization and
   witness materialization coverage.
+- Added pinned V1 producer-contract surfaces:
+  - `src/zksec/ingest_types.py`
+  - `src/zksec/build_mu_exec_from_ingest.py`
+  - `docs/producer_contracts/mu_exec_ingest_v1.md`
+  - `tests/fixtures/zkperf_trace_min.json`
+  - `tests/fixtures/ghidra_grounding_min.json`
+  - `tests/test_mu_exec_ingest.py`
 
 ### Changed
 - Updated `COMPACTIFIED_CONTEXT.md` with canonical metadata for the
@@ -34,6 +41,9 @@
   witness grounding.
 - Updated `README.md` and `TODO.md` to mark Milestone 14 implemented as a
   library-only ingest surface rather than a future plan.
+- Narrowed the next `mu_exec` producer seam to one pinned `zkperf` trace
+  envelope, one pinned `ghidra` IR grounding envelope, and one explicit
+  `LinkageWitness` contract before any broader live integration work.
 - Extended `src/zksec/admissibility.py` so grounded `mu_exec` invariant
   failures reject, grounded-safe witnesses allow, and proposal-only witnesses
   require confirmation rather than silently promoting to violations.
@@ -44,10 +54,10 @@
 - Added focused Milestone 13 coverage in `tests/test_admissibility.py`,
   `tests/test_routing.py`, and `tests/test_reporting.py`.
 - Revalidated the extractor-facing and authority-split test surface with
-  `PYTHONPATH=src pytest -q tests/test_mu_exec.py tests/test_admissibility.py tests/test_routing.py tests/test_reporting.py`
-  and recorded `38 passed`.
+  `PYTHONPATH=src pytest -q tests/test_mu_exec_ingest.py tests/test_mu_exec.py tests/test_admissibility.py tests/test_routing.py tests/test_reporting.py`
+  and recorded `41 passed`.
 - Revalidated the full suite with `PYTHONPATH=src pytest -q` and recorded
-  `67 passed`.
+  `74 passed`.
 
 ## 2026-04-07
 ### Added
