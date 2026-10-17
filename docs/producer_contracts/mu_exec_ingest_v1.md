@@ -23,7 +23,7 @@ proposal-only.
 - Runtime lineage: `run_id`, `t_index`, `pid`, `tid`
 - Observed operation: `actor`, `op`, `obj_hint`
 - Scalar payload: `value_int`, `value_str`
-- Evidence only: `quals`, `provenance`
+- Evidence only: `quals`, `provenance`, optional validated `da51`
 
 Forbidden at this layer:
 
@@ -62,6 +62,28 @@ Current invariant families:
 - Canonical IDs are stable ingest identities.
 - Provenance fields are append-only receipts backing those identities.
 - Provenance is not the semantic identity layer.
+
+### DA51 evidence identity
+
+`Da51EvidenceRef` validates the shared `0xDA51 [16|4|44]` envelope and may be
+attached to a trace proposal. Historical type codes `0`–`7` remain legacy
+identities; type `8` is the atlas payload
+`[level:4][biome:4][status:4][serial:12][reserved:20]`.
+
+DA51 remains an **identity/provenance carrier only** at the zkSEC boundary:
+
+- a valid prefix or known type does not establish vulnerability or severity;
+- atlas status `1` (`provedTrue`) does not establish a security invariant;
+- atlas status `2` (`provedFalse`) does not establish exploitability;
+- literature statuses do not establish local proof authority;
+- a zkperf DA51 reference remains proposal-only until the existing IR
+  grounding, linkage score, and invariant evaluation path succeeds;
+- unknown type codes are rejected by default and may only be retained when an
+  explicit caller opts into unknown-envelope handling.
+
+For type `8`, zkSEC additionally requires canonical zero reserved bits and
+recognized level/biome/status codes. Those checks validate the coordinate
+syntax only; they never promote authority.
 
 ## Current Fixture Pair
 

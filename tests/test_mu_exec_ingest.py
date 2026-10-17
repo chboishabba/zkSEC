@@ -1,3 +1,4 @@
+from dataclasses import replace
 from pathlib import Path
 
 from zksec import AdmissibilityInput, evaluate_transform_admissibility
@@ -7,6 +8,7 @@ from zksec.build_mu_exec_from_ingest import (
     load_trace_proposal_facts,
     resolve_linkage_witness,
 )
+from zksec.da51 import Da51EvidenceRef
 
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -91,6 +93,29 @@ def test_trace_only_fixture_stays_proposal_only() -> None:
     witness = build_mu_exec_witness_from_ingest(trace_facts=trace_facts, ir_facts=())
     decision = evaluate_transform_admissibility(candidate=_base_candidate(mu_exec_witness=witness))
 
+    assert witness.state == "proposal_only"
+    assert witness.grounding_basis == ()
+    assert witness.invariant_codes == ()
+    assert decision.verdict == "allow_with_confirmation"
+
+
+def test_type8_proved_status_does_not_bypass_security_grounding() -> None:
+    trace_facts = load_trace_proposal_facts(FIXTURES / "zkperf_trace_min.json")
+    proved_address = Da51EvidenceRef.parse(
+        "0xDA51800100000000",
+        producer="zkperf",
+        provenance=("atlas-status-byte",),
+    )
+    addressed = (
+        replace(trace_facts[0], da51=proved_address),
+        *trace_facts[1:],
+    )
+
+    witness = build_mu_exec_witness_from_ingest(trace_facts=addressed, ir_facts=())
+    decision = evaluate_transform_admissibility(candidate=_base_candidate(mu_exec_witness=witness))
+
+    assert addressed[0].normalized().da51 is not None
+    assert addressed[0].normalized().da51.atlas_coordinate().status_code == 1
     assert witness.state == "proposal_only"
     assert witness.grounding_basis == ()
     assert witness.invariant_codes == ()

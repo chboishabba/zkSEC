@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from .da51 import Da51EvidenceRef
 from .ingest_types import IRGroundingFact, LinkageWitness, TraceProposalFact
 from .mu_exec import MuExecWitness, build_mu_exec_witness, evaluate_mu_exec_invariants
 
@@ -140,12 +141,33 @@ def build_mu_exec_witness_from_ingest(
     )
 
 
+def _trace_fact_from_payload(payload: dict[str, object]) -> TraceProposalFact:
+    fact = dict(payload)
+    da51_payload = fact.get("da51")
+    if isinstance(da51_payload, dict):
+        address = str(da51_payload.get("address", ""))
+        producer = str(da51_payload.get("producer", fact.get("tool", "zkperf")))
+        provenance_raw = da51_payload.get("provenance", ())
+        provenance = tuple(str(item) for item in provenance_raw) if isinstance(provenance_raw, list | tuple) else ()
+        fact["da51"] = Da51EvidenceRef.parse(
+            address,
+            producer=producer,
+            provenance=provenance,
+        )
+    elif isinstance(da51_payload, str):
+        fact["da51"] = Da51EvidenceRef.parse(
+            da51_payload,
+            producer=str(fact.get("tool", "zkperf")),
+        )
+    return TraceProposalFact(**fact).normalized()  # type: ignore[arg-type]
+
+
 def load_trace_proposal_facts(path: str | Path) -> tuple[TraceProposalFact, ...]:
     """Load pinned trace proposal facts from a local JSON fixture."""
 
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
     facts = payload["trace_facts"] if isinstance(payload, dict) else payload
-    return tuple(TraceProposalFact(**fact).normalized() for fact in facts)
+    return tuple(_trace_fact_from_payload(fact) for fact in facts)
 
 
 def load_ir_grounding_facts(path: str | Path) -> tuple[IRGroundingFact, ...]:
