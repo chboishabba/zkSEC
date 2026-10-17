@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
-from .da51 import Da51EvidenceRef
+from .da51 import Da51EvidenceRef, Da51ValidationError
 
 
 def _normalize_text(value: str | None) -> str:
@@ -57,6 +57,10 @@ class TraceProposalFact:
         fact_id = _normalize_text(self.fact_id)
         run_id = _normalize_text(self.run_id)
         da51 = self.da51.normalized() if self.da51 is not None else None
+        if da51 is not None and da51.producer != self.tool:
+            raise Da51ValidationError(
+                f"DA51 producer {da51.producer!r} does not match trace producer {self.tool!r}"
+            )
         provenance = self.provenance
         if da51 is not None:
             provenance = provenance + (da51.provenance_token(),)
