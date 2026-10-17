@@ -17,6 +17,7 @@ ATLAS_TYPE = 8
 LEVEL_CODES = frozenset(range(6))
 BIOME_CODES = frozenset(range(9))
 STATUS_CODES = frozenset(range(5))
+ASCII_HEX_DIGITS = frozenset("0123456789abcdefABCDEF")
 
 
 class Da51ValidationError(ValueError):
@@ -54,6 +55,8 @@ class Da51EvidenceRef:
         body = text[2:] if text[:2].lower() == "0x" else text
         if len(body) != 16:
             raise Da51ValidationError("DA51 address must contain exactly 16 hexadecimal digits")
+        if not body.isascii() or any(ch not in ASCII_HEX_DIGITS for ch in body):
+            raise Da51ValidationError("DA51 address contains non-ASCII hexadecimal characters")
         try:
             raw = int(body, 16)
         except ValueError as exc:
