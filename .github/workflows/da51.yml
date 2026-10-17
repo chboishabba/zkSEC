@@ -1,0 +1,29 @@
+name: DA51
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'src/zksec/da51.py'
+      - 'src/zksec/ingest_types.py'
+      - 'src/zksec/build_mu_exec_from_ingest.py'
+      - 'tests/test_da51.py'
+      - 'tests/test_da51_ingest.py'
+      - 'tests/test_mu_exec_ingest.py'
+      - 'fixtures/da51_v1.json'
+      - '.github/workflows/da51.yml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pytest
+      - name: Focused DA51 and mu_exec tests
+        env:
+          PYTHONPATH: src
+        run: python -m pytest -q tests/test_da51.py tests/test_da51_ingest.py tests/test_mu_exec_ingest.py
