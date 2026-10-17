@@ -31,6 +31,11 @@ def test_unknown_type_requires_explicit_allowance() -> None:
     assert ref.known_type is False
 
 
+def test_non_ascii_hex_digits_are_rejected() -> None:
+    with pytest.raises(Da51ValidationError, match="non-ASCII hexadecimal"):
+        Da51EvidenceRef.parse("0xDA51８00000000000", producer="zkperf")
+
+
 def test_atlas_fixture_decodes_exact_fields() -> None:
     ref = Da51EvidenceRef.parse("0xDA51853000A00000", producer="zkperf")
     coord = ref.atlas_coordinate()
