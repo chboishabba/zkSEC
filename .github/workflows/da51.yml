@@ -5,9 +5,12 @@ on:
     branches: [master]
     paths:
       - 'src/zksec/da51.py'
+      - 'src/zksec/da51_provenance.py'
       - 'src/zksec/ingest_types.py'
       - 'src/zksec/build_mu_exec_from_ingest.py'
       - 'tests/test_da51.py'
+      - 'tests/test_da51_vectors.py'
+      - 'tests/test_da51_provenance.py'
       - 'tests/test_da51_ingest.py'
       - 'tests/test_mu_exec_ingest.py'
       - 'fixtures/da51_v1.json'
@@ -25,7 +28,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Verify shared fixture bytes
-        run: echo 'cc67f109e5be3cfea89d7a8e0ba2b1b6279b5f012d751efbdb7e3a971e957106  fixtures/da51_v1.json' | sha256sum --check -
+        run: echo '3a2f191afd465b52ba1db7774c0cf3d02d1ee4f099ea62cd33802ab52293cd75  fixtures/da51_v1.json' | sha256sum --check -
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -33,4 +36,4 @@ jobs:
       - name: Focused DA51 and mu_exec tests
         env:
           PYTHONPATH: src
-        run: python -m pytest -q tests/test_da51.py tests/test_da51_ingest.py tests/test_mu_exec_ingest.py
+        run: python -m pytest -q tests/test_da51.py tests/test_da51_vectors.py tests/test_da51_provenance.py tests/test_da51_ingest.py tests/test_mu_exec_ingest.py
