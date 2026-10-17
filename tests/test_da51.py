@@ -1,6 +1,12 @@
+import json
+from pathlib import Path
+
 import pytest
 
 from zksec.da51 import Da51EvidenceRef, Da51ValidationError
+
+
+MANIFEST = Path(__file__).parents[1] / "fixtures" / "da51_v1.json"
 
 
 def test_legacy_da51_identity_is_accepted_without_atlas_semantics() -> None:
@@ -36,6 +42,18 @@ def test_atlas_fixture_decodes_exact_fields() -> None:
     assert coord.serial == 10
 
 
+def test_all_shared_atlas_addresses_are_canonical() -> None:
+    payload = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    addresses = payload["atlas_addresses"]
+
+    assert len(addresses) == 23
+    refs = [Da51EvidenceRef.parse(address, producer="zkperf") for address in addresses]
+    coords = [ref.atlas_coordinate() for ref in refs]
+    assert all(coord is not None for coord in coords)
+    assert [coord.serial for coord in coords if coord is not None] == list(range(23))
+    assert len({ref.address for ref in refs}) == 23
+
+
 def test_atlas_reserved_bits_are_rejected() -> None:
     with pytest.raises(Da51ValidationError, match="reserved bits"):
         Da51EvidenceRef.parse("0xDA51800100000001", producer="zkperf")
@@ -48,6 +66,15 @@ def test_invalid_atlas_codes_are_rejected() -> None:
         Da51EvidenceRef.parse("0xDA51809100000000", producer="zkperf")
     with pytest.raises(Da51ValidationError, match="status code 5"):
         Da51EvidenceRef.parse("0xDA51800500000000", producer="zkperf")
+
+
+def test_max_serial_manifest_fixture_is_canonical() -> None:
+    payload = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    ref = Da51EvidenceRef.parse(payload["max_serial_address"], producer="zkperf")
+    coord = ref.atlas_coordinate()
+
+    assert coord is not None
+    assert coord.serial == 4095
 
 
 def test_wrong_prefix_is_rejected() -> None:
