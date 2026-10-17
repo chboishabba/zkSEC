@@ -56,3 +56,63 @@ class Da51EvidenceEnvelope:
     @property
     def identity_token(self) -> str:
         return self.ref.provenance_token()
+
+
+@dataclass(frozen=True)
+class FormalRuntimeEvidenceLink:
+    """Cross-system linkage for evidence related to a formal demand.
+
+    The linkage is navigation/provenance only.  Even a linked proof artifact
+    does not by itself establish a security finding, severity, exploitability,
+    authorization, or an SLR payment.  Runtime traces/benchmarks likewise never
+    become formal theorem certificates through DA51 linkage.
+    """
+
+    evidence: Da51EvidenceEnvelope
+    demand_ref: str | None = None
+    obligation_ref: str | None = None
+    statement_digest: str | None = None
+    artifact_revision: str | None = None
+
+    @classmethod
+    def build(
+        cls,
+        *,
+        evidence: Da51EvidenceEnvelope,
+        demand_ref: str | None = None,
+        obligation_ref: str | None = None,
+        statement_digest: str | None = None,
+        artifact_revision: str | None = None,
+    ) -> "FormalRuntimeEvidenceLink":
+        values = {
+            "demand_ref": demand_ref,
+            "obligation_ref": obligation_ref,
+            "statement_digest": statement_digest,
+            "artifact_revision": artifact_revision,
+        }
+        cleaned: dict[str, str | None] = {}
+        for name, value in values.items():
+            if value is None:
+                cleaned[name] = None
+                continue
+            item = value.strip()
+            if not item:
+                raise ValueError(f"{name} must not be empty when present")
+            cleaned[name] = item
+        return cls(evidence=evidence, **cleaned)
+
+    @property
+    def establishes_formal_proof(self) -> bool:
+        return False
+
+    @property
+    def establishes_security_conclusion(self) -> bool:
+        return False
+
+    @property
+    def authorizes_action(self) -> bool:
+        return False
+
+    @property
+    def security_severity(self) -> None:
+        return None
