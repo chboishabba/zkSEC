@@ -47,3 +47,6 @@ See `docs/DEPENDENCIES.md` for details.
 - [PlantUML source](docs/uml/zksec-control-architecture.puml)
 - [C4 architecture diagram (SVG)](docs/uml/zksec-c4-architecture.svg)
 - [C4 source](docs/uml/zksec-c4-architecture.puml)
+
+## Next milestone (planned)
+- [Milestone 15: ARTEX defensive interoperability and independent efficacy](docs/MILESTONE_15.md). Offline proposal-only evidence, independent ground truth, no outbound execution.

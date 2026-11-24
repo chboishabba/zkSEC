@@ -121,3 +121,9 @@
 - [x] Revalidate the extractor-facing and authority-split test surface with
   `PYTHONPATH=src pytest -q tests/test_mu_exec_ingest.py tests/test_mu_exec.py tests/test_admissibility.py tests/test_routing.py tests/test_reporting.py`
   and record `41 passed`.
+
+## Milestone 15: ARTEX defensive interoperability and efficacy
+- [ ] M15-A–F: offline observation import, bidirectional anchors, grounded witnesses, indexed residuals and deterministic authority evaluation.
+- [ ] M15-G (P0): independent held-out defensive efficacy benchmark and paired baseline/fusion receipts.
+- [ ] M15-H–I (P1): selective-disclosure receipts and SLR/ITIR interoperability.
+- See [Milestone 15](docs/MILESTONE_15.md) for acceptance and cross-repo ownership.

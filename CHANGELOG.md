@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24
+- Planned M15 ARTEX defensive interoperability and independent efficacy evaluation; documentation only, no implementation or test results claimed.
+
 ## 2026-04-19
 ### Added
 - Added `docs/MILESTONE_13.md` to define the docs-first plan for a grounded
